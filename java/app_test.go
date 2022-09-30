@@ -78,11 +78,11 @@ func TestApp(t *testing.T) {
 			expectedLinkImplicits = append(expectedLinkImplicits, manifestFixer.Output.String())
 
 			frameworkRes := result.ModuleForTests("framework-res", "android_common")
-			lineageRes := result.ModuleForTests("org.lineageos.platform-res", "android_common")
+			portalromRes := result.ModuleForTests("org.portalrom.platform-res", "android_common")
 			expectedLinkImplicits = append(expectedLinkImplicits,
 				frameworkRes.Output("package-res.apk").Output.String())
 			expectedLinkImplicits = append(expectedLinkImplicits,
-				lineageRes.Output("package-res.apk").Output.String())
+				portalromRes.Output("package-res.apk").Output.String())
 
 			// Test the mapping from input files to compiled output file names
 			compile := foo.Output(compiledResourceFiles[0])
@@ -1491,7 +1491,7 @@ func TestCertificates(t *testing.T) {
 		name                string
 		bp                  string
 		certificateOverride string
-		expectedLineage     string
+		expectedPortalRom     string
 		expectedCertificate string
 	}{
 		{
@@ -1504,7 +1504,7 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "",
-			expectedLineage:     "",
+			expectedPortalRom:     "",
 			expectedCertificate: "build/make/target/product/security/testkey.x509.pem build/make/target/product/security/testkey.pk8",
 		},
 		{
@@ -1523,7 +1523,7 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "",
-			expectedLineage:     "",
+			expectedPortalRom:     "",
 			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
 		},
 		{
@@ -1537,7 +1537,7 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "",
-			expectedLineage:     "",
+			expectedPortalRom:     "",
 			expectedCertificate: "build/make/target/product/security/expiredkey.x509.pem build/make/target/product/security/expiredkey.pk8",
 		},
 		{
@@ -1556,17 +1556,17 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "foo:new_certificate",
-			expectedLineage:     "",
+			expectedPortalRom:     "",
 			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
 		},
 		{
-			name: "certificate lineage",
+			name: "certificate portalrom",
 			bp: `
 				android_app {
 					name: "foo",
 					srcs: ["a.java"],
 					certificate: ":new_certificate",
-					lineage: "lineage.bin",
+					portalrom: "portalrom.bin",
 					sdk_version: "current",
 				}
 
@@ -1576,17 +1576,17 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "",
-			expectedLineage:     "--lineage lineage.bin",
+			expectedPortalRom:     "--portalrom portalrom.bin",
 			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
 		},
 		{
-			name: "lineage from filegroup",
+			name: "portalrom from filegroup",
 			bp: `
 				android_app {
 					name: "foo",
 					srcs: ["a.java"],
 					certificate: ":new_certificate",
-					lineage: ":lineage_bin",
+					portalrom: ":portalrom_bin",
 					sdk_version: "current",
 				}
 
@@ -1596,12 +1596,12 @@ func TestCertificates(t *testing.T) {
 				}
 
 				filegroup {
-					name: "lineage_bin",
-					srcs: ["lineage.bin"],
+					name: "portalrom_bin",
+					srcs: ["portalrom.bin"],
 				}
 			`,
 			certificateOverride: "",
-			expectedLineage:     "--lineage lineage.bin",
+			expectedPortalRom:     "--portalrom portalrom.bin",
 			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
 		},
 	}
@@ -1624,7 +1624,7 @@ func TestCertificates(t *testing.T) {
 			android.AssertStringEquals(t, "certificates flags", test.expectedCertificate, signCertificateFlags)
 
 			signFlags := signapk.Args["flags"]
-			android.AssertStringEquals(t, "signing flags", test.expectedLineage, signFlags)
+			android.AssertStringEquals(t, "signing flags", test.expectedPortalRom, signFlags)
 		})
 	}
 }
@@ -1802,7 +1802,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			name: "bar",
 			base: "foo",
 			certificate: ":new_certificate",
-			lineage: "lineage.bin",
+			portalrom: "portalrom.bin",
 			logging_parent: "bah",
 		}
 
@@ -1854,7 +1854,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 		apkName         string
 		apkPath         string
 		certFlag        string
-		lineageFlag     string
+		portalromFlag     string
 		overrides       []string
 		packageFlag     string
 		renameResources bool
@@ -1866,7 +1866,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			variantName:     "android_common",
 			apkPath:         "out/soong/target/product/test_device/system/app/foo/foo.apk",
 			certFlag:        "build/make/target/product/security/expiredkey.x509.pem build/make/target/product/security/expiredkey.pk8",
-			lineageFlag:     "",
+			portalromFlag:     "",
 			overrides:       []string{"qux"},
 			packageFlag:     "",
 			renameResources: false,
@@ -1878,7 +1878,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			variantName:     "android_common_bar",
 			apkPath:         "out/soong/target/product/test_device/system/app/bar/bar.apk",
 			certFlag:        "cert/new_cert.x509.pem cert/new_cert.pk8",
-			lineageFlag:     "--lineage lineage.bin",
+			portalromFlag:     "--portalrom portalrom.bin",
 			overrides:       []string{"qux", "foo"},
 			packageFlag:     "",
 			renameResources: false,
@@ -1890,7 +1890,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			variantName:     "android_common_baz",
 			apkPath:         "out/soong/target/product/test_device/system/app/baz/baz.apk",
 			certFlag:        "build/make/target/product/security/expiredkey.x509.pem build/make/target/product/security/expiredkey.pk8",
-			lineageFlag:     "",
+			portalromFlag:     "",
 			overrides:       []string{"qux", "foo"},
 			packageFlag:     "org.dandroid.bp",
 			renameResources: true,
@@ -1902,7 +1902,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			variantName:     "android_common_baz_no_rename_resources",
 			apkPath:         "out/soong/target/product/test_device/system/app/baz_no_rename_resources/baz_no_rename_resources.apk",
 			certFlag:        "build/make/target/product/security/expiredkey.x509.pem build/make/target/product/security/expiredkey.pk8",
-			lineageFlag:     "",
+			portalromFlag:     "",
 			overrides:       []string{"qux", "foo"},
 			packageFlag:     "org.dandroid.bp",
 			renameResources: false,
@@ -1914,7 +1914,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			variantName:     "android_common_baz_base_no_rename_resources",
 			apkPath:         "out/soong/target/product/test_device/system/app/baz_base_no_rename_resources/baz_base_no_rename_resources.apk",
 			certFlag:        "build/make/target/product/security/expiredkey.x509.pem build/make/target/product/security/expiredkey.pk8",
-			lineageFlag:     "",
+			portalromFlag:     "",
 			overrides:       []string{"qux", "foo_no_rename_resources"},
 			packageFlag:     "org.dandroid.bp",
 			renameResources: false,
@@ -1926,7 +1926,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			variantName:     "android_common_baz_override_base_rename_resources",
 			apkPath:         "out/soong/target/product/test_device/system/app/baz_override_base_rename_resources/baz_override_base_rename_resources.apk",
 			certFlag:        "build/make/target/product/security/expiredkey.x509.pem build/make/target/product/security/expiredkey.pk8",
-			lineageFlag:     "",
+			portalromFlag:     "",
 			overrides:       []string{"qux", "foo_no_rename_resources"},
 			packageFlag:     "org.dandroid.bp",
 			renameResources: true,
@@ -1944,9 +1944,9 @@ func TestOverrideAndroidApp(t *testing.T) {
 		certFlag := signapk.Args["certificates"]
 		android.AssertStringEquals(t, "certificates flags", expected.certFlag, certFlag)
 
-		// Check the lineage flags
-		lineageFlag := signapk.Args["flags"]
-		android.AssertStringEquals(t, "signing flags", expected.lineageFlag, lineageFlag)
+		// Check the portalrom flags
+		portalromFlag := signapk.Args["flags"]
+		android.AssertStringEquals(t, "signing flags", expected.portalromFlag, portalromFlag)
 
 		// Check if the overrides field values are correctly aggregated.
 		mod := variant.Module().(*AndroidApp)

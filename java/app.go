@@ -122,8 +122,8 @@ type overridableAppProperties struct {
 	// or an android_app_certificate module name in the form ":module".
 	Certificate *string
 
-	// Name of the signing certificate lineage file or filegroup module.
-	Lineage *string `android:"path"`
+	// Name of the signing certificate portalrom file or filegroup module.
+	PortalRom *string `android:"path"`
 
 	// the package name of this app. The package name in the manifest file is used if one was not given.
 	Package_name *string
@@ -448,8 +448,8 @@ func (a *AndroidApp) installPath(ctx android.ModuleContext) android.InstallPath 
 	if ctx.ModuleName() == "framework-res" {
 		// framework-res.apk is installed as system/framework/framework-res.apk
 		installDir = "framework"
-	} else if ctx.ModuleName() == "org.lineageos.platform-res" {
-		// org.lineageos.platform-res.apk is installed as system/framework/org.lineageos.platform-res.apk
+	} else if ctx.ModuleName() == "org.portalrom.platform-res" {
+		// org.portalrom.platform-res.apk is installed as system/framework/org.portalrom.platform-res.apk
 		installDir = "framework"
 	} else if a.Privileged() {
 		installDir = filepath.Join("priv-app", a.installApkName)
@@ -472,7 +472,7 @@ func (a *AndroidApp) dexBuildActions(ctx android.ModuleContext) android.Path {
 	a.dexpreopter.classLoaderContexts = a.classLoaderContexts
 	a.dexpreopter.manifestFile = a.mergedManifestFile
 
-	if ctx.ModuleName() != "framework-res" && ctx.ModuleName() != "org.lineageos.platform-res" {
+	if ctx.ModuleName() != "framework-res" && ctx.ModuleName() != "org.portalrom.platform-res" {
 		a.Module.compile(ctx, a.aaptSrcJar)
 	}
 
@@ -626,8 +626,8 @@ func (a *AndroidApp) generateAndroidBuildActions(ctx android.ModuleContext) {
 	if ctx.ModuleName() == "framework-res" {
 		// framework-res.apk is installed as system/framework/framework-res.apk
 		a.installDir = android.PathForModuleInstall(ctx, "framework")
-	} else if ctx.ModuleName() == "org.lineageos.platform-res" {
-		// org.lineageos.platform-res.apk is installed as system/framework/org.lineageos.platform-res.apk
+	} else if ctx.ModuleName() == "org.portalrom.platform-res" {
+		// org.portalrom.platform-res.apk is installed as system/framework/org.portalrom.platform-res.apk
 		a.installDir = android.PathForModuleInstall(ctx, "framework")
 	} else if a.Privileged() {
 		a.installDir = android.PathForModuleInstall(ctx, "priv-app", a.installApkName)
@@ -688,11 +688,11 @@ func (a *AndroidApp) generateAndroidBuildActions(ctx android.ModuleContext) {
 	if v4SigningRequested {
 		v4SignatureFile = android.PathForModuleOut(ctx, a.installApkName+".apk.idsig")
 	}
-	var lineageFile android.Path
-	if lineage := String(a.overridableAppProperties.Lineage); lineage != "" {
-		lineageFile = android.PathForModuleSrc(ctx, lineage)
+	var portalromFile android.Path
+	if portalrom := String(a.overridableAppProperties.PortalRom); portalrom != "" {
+		portalromFile = android.PathForModuleSrc(ctx, portalrom)
 	}
-	CreateAndSignAppPackage(ctx, packageFile, a.exportPackage, jniJarFile, dexJarFile, certificates, apkDeps, v4SignatureFile, lineageFile)
+	CreateAndSignAppPackage(ctx, packageFile, a.exportPackage, jniJarFile, dexJarFile, certificates, apkDeps, v4SignatureFile, portalromFile)
 	a.outputFile = packageFile
 	if v4SigningRequested {
 		a.extraOutputFiles = append(a.extraOutputFiles, v4SignatureFile)
@@ -704,7 +704,7 @@ func (a *AndroidApp) generateAndroidBuildActions(ctx android.ModuleContext) {
 		if v4SigningRequested {
 			v4SignatureFile = android.PathForModuleOut(ctx, a.installApkName+"_"+split.suffix+".apk.idsig")
 		}
-		CreateAndSignAppPackage(ctx, packageFile, split.path, nil, nil, certificates, apkDeps, v4SignatureFile, lineageFile)
+		CreateAndSignAppPackage(ctx, packageFile, split.path, nil, nil, certificates, apkDeps, v4SignatureFile, portalromFile)
 		a.extraOutputFiles = append(a.extraOutputFiles, packageFile)
 		if v4SigningRequested {
 			a.extraOutputFiles = append(a.extraOutputFiles, v4SignatureFile)
