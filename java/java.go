@@ -266,7 +266,7 @@ var (
 	bootClasspathTag        = dependencyTag{name: "bootclasspath"}
 	systemModulesTag        = dependencyTag{name: "system modules"}
 	frameworkResTag         = dependencyTag{name: "framework-res"}
-	lineageResTag           = dependencyTag{name: "org.lineageos.platform-res"}
+	portalromResTag           = dependencyTag{name: "org.portalrom.platform-res"}
 	kotlinStdlibTag         = dependencyTag{name: "kotlin-stdlib"}
 	kotlinAnnotationsTag    = dependencyTag{name: "kotlin-annotations"}
 	proguardRaiseTag        = dependencyTag{name: "proguard-raise"}
@@ -309,7 +309,7 @@ type sdkDep struct {
 	java9Classpath []string
 
 	frameworkResModule string
-	lineageResModule   string
+	portalromResModule   string
 
 	jars android.Paths
 	aidl android.OptionalPath
@@ -349,7 +349,7 @@ func sdkDeps(ctx android.BottomUpMutatorContext, sdkContext android.SdkContext, 
 	if sdkDep.systemModules != "" {
 		ctx.AddVariationDependencies(nil, systemModulesTag, sdkDep.systemModules)
 	}
-	if ctx.ModuleName() == "org.lineageos.platform-res" {
+	if ctx.ModuleName() == "org.portalrom.platform-res" {
 		ctx.AddDependency(ctx.Module(), frameworkResTag, "framework-res")
 	}
 }
