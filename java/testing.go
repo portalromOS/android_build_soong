@@ -311,7 +311,7 @@ func gatherRequiredDepsForTest() string {
 		}
 
 		android_app {
-			name: "org.portalrom.platform-res",
+			name: "org.lineageos.platform-res",
 			sdk_version: "core_platform",
 		}`
 
