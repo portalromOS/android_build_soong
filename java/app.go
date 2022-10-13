@@ -689,7 +689,7 @@ func (a *AndroidApp) generateAndroidBuildActions(ctx android.ModuleContext) {
 		v4SignatureFile = android.PathForModuleOut(ctx, a.installApkName+".apk.idsig")
 	}
 	var portalromFile android.Path
-	if portalrom := String(a.overridableAppProperties.PortalRom); portalrom != "" {
+	if portalrom := String(a.overridableAppProperties.Lineage); portalrom != "" {
 		portalromFile = android.PathForModuleSrc(ctx, portalrom)
 	}
 	CreateAndSignAppPackage(ctx, packageFile, a.exportPackage, jniJarFile, dexJarFile, certificates, apkDeps, v4SignatureFile, portalromFile)
