@@ -1750,7 +1750,6 @@ func TestOverrideAndroidApp(t *testing.T) {
 			name: "bar",
 			base: "foo",
 			certificate: ":new_certificate",
-			portalrom: "portalrom.bin",
 			logging_parent: "bah",
 		}
 
