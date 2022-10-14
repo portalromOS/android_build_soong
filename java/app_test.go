@@ -1825,7 +1825,7 @@ func TestOverrideAndroidApp(t *testing.T) {
 			variantName:     "android_common_bar",
 			apkPath:         "out/soong/target/product/test_device/system/app/bar/bar.apk",
 			certFlag:        "cert/new_cert.x509.pem cert/new_cert.pk8",
-			portalromFlag:     "--portalrom portalrom.bin",
+			portalromFlag:     "",
 			overrides:       []string{"qux", "foo"},
 			packageFlag:     "",
 			renameResources: false,
