@@ -1491,7 +1491,6 @@ func TestCertificates(t *testing.T) {
 		name                string
 		bp                  string
 		certificateOverride string
-		expectedPortalRom     string
 		expectedCertificate string
 	}{
 		{
@@ -1504,7 +1503,6 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "",
-			expectedPortalRom:     "",
 			expectedCertificate: "build/make/target/product/security/testkey.x509.pem build/make/target/product/security/testkey.pk8",
 		},
 		{
@@ -1523,7 +1521,6 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "",
-			expectedPortalRom:     "",
 			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
 		},
 		{
@@ -1537,7 +1534,6 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "",
-			expectedPortalRom:     "",
 			expectedCertificate: "build/make/target/product/security/expiredkey.x509.pem build/make/target/product/security/expiredkey.pk8",
 		},
 		{
@@ -1556,52 +1552,6 @@ func TestCertificates(t *testing.T) {
 				}
 			`,
 			certificateOverride: "foo:new_certificate",
-			expectedPortalRom:     "",
-			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
-		},
-		{
-			name: "certificate portalrom",
-			bp: `
-				android_app {
-					name: "foo",
-					srcs: ["a.java"],
-					certificate: ":new_certificate",
-					portalrom: "portalrom.bin",
-					sdk_version: "current",
-				}
-
-				android_app_certificate {
-					name: "new_certificate",
-					certificate: "cert/new_cert",
-				}
-			`,
-			certificateOverride: "",
-			expectedPortalRom:     "--portalrom portalrom.bin",
-			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
-		},
-		{
-			name: "portalrom from filegroup",
-			bp: `
-				android_app {
-					name: "foo",
-					srcs: ["a.java"],
-					certificate: ":new_certificate",
-					portalrom: ":portalrom_bin",
-					sdk_version: "current",
-				}
-
-				android_app_certificate {
-					name: "new_certificate",
-					certificate: "cert/new_cert",
-				}
-
-				filegroup {
-					name: "portalrom_bin",
-					srcs: ["portalrom.bin"],
-				}
-			`,
-			certificateOverride: "",
-			expectedPortalRom:     "--portalrom portalrom.bin",
 			expectedCertificate: "cert/new_cert.x509.pem cert/new_cert.pk8",
 		},
 	}
