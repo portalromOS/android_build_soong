@@ -1573,8 +1573,6 @@ func TestCertificates(t *testing.T) {
 			signCertificateFlags := signapk.Args["certificates"]
 			android.AssertStringEquals(t, "certificates flags", test.expectedCertificate, signCertificateFlags)
 
-			signFlags := signapk.Args["flags"]
-			android.AssertStringEquals(t, "signing flags", test.expectedPortalRom, signFlags)
 		})
 	}
 }
