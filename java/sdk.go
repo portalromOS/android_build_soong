@@ -136,7 +136,7 @@ func decodeSdkDep(ctx android.EarlyModuleContext, sdkContext android.SdkContext)
 			bootclasspath:      corePlatformBootclasspathLibraries(ctx),
 			classpath:          config.FrameworkLibraries,
 			frameworkResModule: "framework-res",
-			lineageResModule:   "org.lineageos.platform-res",
+			lineageResModule:   "org.portalrom.platform-res",
 		}
 	case android.SdkNone:
 		systemModules := sdkContext.SystemModules()
@@ -163,11 +163,11 @@ func decodeSdkDep(ctx android.EarlyModuleContext, sdkContext android.SdkContext)
 			noFrameworksLibs: true,
 		}
 	case android.SdkPublic:
-		return toModule([]string{"android_stubs_current"}, "framework-res", "org.lineageos.platform-res", sdkFrameworkAidlPath(ctx))
+		return toModule([]string{"android_stubs_current"}, "framework-res", "org.portalrom.platform-res", sdkFrameworkAidlPath(ctx))
 	case android.SdkSystem:
-		return toModule([]string{"android_system_stubs_current"}, "framework-res", "org.lineageos.platform-res", sdkFrameworkAidlPath(ctx))
+		return toModule([]string{"android_system_stubs_current"}, "framework-res", "org.portalrom.platform-res", sdkFrameworkAidlPath(ctx))
 	case android.SdkTest:
-		return toModule([]string{"android_test_stubs_current"}, "framework-res", "org.lineageos.platform-res", sdkFrameworkAidlPath(ctx))
+		return toModule([]string{"android_test_stubs_current"}, "framework-res", "org.portalrom.platform-res", sdkFrameworkAidlPath(ctx))
 	case android.SdkCore:
 		return sdkDep{
 			useModule:        true,
@@ -183,7 +183,7 @@ func decodeSdkDep(ctx android.EarlyModuleContext, sdkContext android.SdkContext)
 			systemModules:      "core-module-lib-stubs-system-modules",
 			java9Classpath:     []string{"android_module_lib_stubs_current"},
 			frameworkResModule: "framework-res",
-			lineageResModule:   "org.lineageos.platform-res",
+			lineageResModule:   "org.portalrom.platform-res",
 			aidl:               android.OptionalPathForPath(nonUpdatableFrameworkAidlPath(ctx)),
 		}
 	case android.SdkSystemServer:
@@ -194,7 +194,7 @@ func decodeSdkDep(ctx android.EarlyModuleContext, sdkContext android.SdkContext)
 			systemModules:      "core-module-lib-stubs-system-modules",
 			java9Classpath:     []string{"android_system_server_stubs_current"},
 			frameworkResModule: "framework-res",
-			lineageResModule:   "org.lineageos.platform-res",
+			lineageResModule:   "org.portalrom.platform-res",
 			aidl:               android.OptionalPathForPath(sdkFrameworkAidlPath(ctx)),
 		}
 	default:
